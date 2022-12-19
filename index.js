@@ -26,7 +26,7 @@ function objectMapping(startObj, mappingObj) {
   
   function mappingMethod(objectForMapping, mappingConditions) {
     for (let key in objectForMapping) {
-      if (typeof mappingConditions === 'object') || !(key in mappingConditions)) continue;
+      if (typeof mappingConditions !== 'object') || !(key in mappingConditions)) continue;
       else {
         if (typeof objectForMapping[key] !== 'object') {
           objectForMapping[key] = mappingConditions[key];
