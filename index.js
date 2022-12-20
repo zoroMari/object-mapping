@@ -21,20 +21,23 @@ const mapping = {
   },
 };
 
+
 function objectMapping(startObj, mappingObj) {
   const startObjCopy = JSON.parse(JSON.stringify(startObj));
   
-  function mappingMethod(objectForMapping, mappingConditions) {
-    for (let key in objectForMapping) {
-      if (typeof mappingConditions !== 'object') || !(key in mappingConditions)) continue;
+  function mappingMethod(objForMap, mapObj) {
+    for (let key in objForMap) {
+      if (!mapObj || !(key in mapObj)) continue;
       else {
-        if (typeof objectForMapping[key] !== 'object') {
-          objectForMapping[key] = mappingConditions[key];
-        } else if (Array.isArray(objectForMapping[key])) {
-          objectForMapping[key].forEach((item) => {
-            if (typeof item === 'object') mappingMethod(item, mappingConditions[key]);
-          });
-        } else mappingMethod(objectForMapping[key], mappingConditions[key]);
+        if (typeof objForMap[key] !== 'object') {
+          objForMap[key] = mapObj[key];
+        } else if (Array.isArray(objForMap[key])) {
+          if (!objForMap[key].find((item) => typeof item === 'object')) {
+            objForMap[key] = mapObj[key];
+          } else {
+            objForMap[key].forEach((item) => mappingMethod(item, mapObj[key]));
+          }
+        } else mappingMethod(objForMap[key], mapObj[key]);
       }
     }
   }
@@ -43,5 +46,3 @@ function objectMapping(startObj, mappingObj) {
 
   return startObjCopy;
 }
-
-  
