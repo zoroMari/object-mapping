@@ -22,6 +22,8 @@ const mapping = {
 };
 
 
+// First implementation
+
 function objectMapping(startObj, mappingObj) {
   const startObjCopy = JSON.parse(JSON.stringify(startObj));
   
@@ -48,4 +50,30 @@ function objectMapping(startObj, mappingObj) {
 }
 
 
+// Second implementation
 
+function map(input, mappings) {
+  function recursiveMap(input, mappings) {
+    const result = { ...input };
+
+    for (let key in result) {
+      if (!mappings || !(key in mappings)) continue;
+      else {
+        if (typeof result[key] !== 'object') result[key] = mappings[key];
+        else if (Array.isArray(result[key])) {
+          if (!result[key].find((item) => typeof item === 'object')) result[key] = mappings[key];
+          else {
+            result[key].forEach((item, i) => {
+              result[key][i] = recursiveMap(result[key][i], mappings[key]);
+            })
+          }
+        }
+        else result[key] = recursiveMap(result[key], mappings[key]);
+      }
+    }
+
+    return result;
+  }
+  
+  return recursiveMap(input, mappings);
+}
