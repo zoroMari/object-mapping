@@ -63,9 +63,11 @@ function map(input, mappings) {
         else if (Array.isArray(result[key])) {
           if (!result[key].find((item) => typeof item === 'object')) result[key] = mappings[key];
           else {
-            result[key].forEach((item, i) => {
-              result[key][i] = recursiveMap(result[key][i], mappings[key]);
+            const resultArray = [...result[key]];
+            resultArray.forEach((item, i) => {
+              resultArray[i] = recursiveMap(resultArray[i], mappings[key]);
             })
+            result[key] = resultArray;
           }
         }
         else result[key] = recursiveMap(result[key], mappings[key]);
